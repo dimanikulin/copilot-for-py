@@ -25,7 +25,10 @@ class RuntimeConfig(_StrictConfigModel):
     @field_validator("host")
     @classmethod
     def host_must_not_be_empty(cls, value: str) -> str:
-        if not value or any(ord(character) < 32 for character in value):
+        if not value or any(
+            ord(character) < 32 or 127 <= ord(character) <= 159
+            for character in value
+        ):
             raise ValueError(
                 "host must be a non-empty string without control characters"
             )
